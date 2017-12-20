@@ -4,12 +4,14 @@ import Hello from '@/components/Hello'
 
 Vue.use(Router)
 
-export default new Router({
-  routes: [
-    {
-      path: '/',
-      name: 'Hello',
-      component: Hello
-    }
-  ]
-})
+export function createRouter() {
+  return new Router({
+    routes: [
+      {
+        path: '/',
+        name: 'Hello',
+        component: Hello
+      }
+    ]
+  })
+}
