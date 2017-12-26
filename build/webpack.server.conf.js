@@ -1,8 +1,12 @@
+const fs = require('fs')
+const path = require('path')
 const webpack = require('webpack')
 const merge = require('webpack-merge')
 const utils = require('./utils')
+const loadMinified = require('./load-minified')
 const config = require('../config')
 const baseWebpackConfig = require('./webpack.base.conf')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 const nodeExternals = require('webpack-node-externals')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const VueSSRServerPlugin = require('vue-server-renderer/server-plugin')
@@ -35,9 +39,44 @@ module.exports = merge(baseWebpackConfig, {
       compress: { warnings: false }
     }),
     new webpack.optimize.ModuleConcatenationPlugin(),
-    new ExtractTextPlugin({
-      filename: utils.assetsPath('css/[name].[contenthash].css')
-    }),
     new VueSSRServerPlugin()
-  ]
+  ].concat(
+    process.env.NODE_ENV === 'production'
+      ? [
+          new ExtractTextPlugin({
+            filename: utils.assetsPath('css/[name].[contenthash].css')
+          }),
+          // generate dist index.html with correct asset hash for caching.
+          // you can customize output by editing /index.html
+          // see https://github.com/ampedandwired/html-webpack-plugin
+          new HtmlWebpackPlugin({
+            filename: config.build.index,
+            template: './src/index.template.html',
+            inject: false,
+            minify: {
+              removeComments: true,
+              collapseWhitespace: true,
+              removeAttributeQuotes: true,
+              ignoreCustomComments: [/vue-ssr-outlet/]
+              // more options:
+              // https://github.com/kangax/html-minifier#options-quick-reference
+            },
+            serviceWorkerLoader: `<script>${loadMinified(
+              path.join(__dirname, './service-worker-prod.js')
+            )}</script>`
+          })
+        ]
+      : [
+          new HtmlWebpackPlugin({
+            filename: config.build.index,
+            template: './src/index.template.html',
+            inject: false,
+            // necessary to consistently work with multiple chunks via CommonsChunkPlugin
+            serviceWorkerLoader: `<script>${fs.readFileSync(
+              path.join(__dirname, './service-worker-dev.js'),
+              'utf-8'
+            )}</script>`
+          })
+        ]
+  )
 })
