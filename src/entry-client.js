@@ -1,5 +1,26 @@
-// import Vue from 'vue'
+import Vue from 'vue'
 import { createApp } from './app'
+import NProgress from 'nprogress'
+
+// global progress bar
+Vue.prototype.$NProgress = NProgress
+
+// a global mixin that calls `asyncData` when a route component's params change
+Vue.mixin({
+  beforeRouteUpdate(to, from, next) {
+    const { asyncData } = this.$options
+    if (asyncData) {
+      asyncData({
+        store: this.$store,
+        route: to
+      })
+        .then(next)
+        .catch(next)
+    } else {
+      next()
+    }
+  }
+})
 
 const { app, router, store } = createApp()
 
@@ -28,10 +49,10 @@ router.onReady(() => {
       return next()
     }
 
-    // bar.start()
+    NProgress.start()
     Promise.all(asyncDataHooks.map(hook => hook({ store, route: to })))
       .then(() => {
-        // bar.finish()
+        NProgress.done()
         next()
       })
       .catch(next)

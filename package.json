@@ -10,13 +10,16 @@
     "build": "rimraf dist && npm run build:server && npm run build:client",
     "build:client": "cross-env platform=client node build/build.js",
     "build:server": "cross-env platform=server node build/build.js",
-    "unit": "cross-env BABEL_ENV=test karma start test/unit/karma.conf.js --single-run",
+    "unit":
+      "cross-env BABEL_ENV=test karma start test/unit/karma.conf.js --single-run",
     "e2e": "node test/e2e/runner.js",
     "test": "npm run unit && npm run e2e",
     "lint": "eslint --ext .js,.vue src test/unit/specs test/e2e/specs"
   },
   "dependencies": {
+    "express": "^4.16.2",
     "compression": "^1.7.1",
+    "nprogress": "^0.2.0",
     "route-cache": "^0.4.4",
     "serve-favicon": "^2.4.5",
     "vue": "^2.5.13",
@@ -53,7 +56,6 @@
     "eslint-plugin-promise": "^3.6.0",
     "eslint-plugin-standard": "^3.0.1",
     "eventsource-polyfill": "^0.9.6",
-    "express": "^4.16.2",
     "extract-text-webpack-plugin": "^3.0.0",
     "file-loader": "^1.1.5",
     "friendly-errors-webpack-plugin": "^1.6.1",
@@ -99,9 +101,5 @@
     "node": ">= 4.0.0",
     "npm": ">= 3.0.0"
   },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not ie <= 8"
-  ]
+  "browserslist": ["> 1%", "last 2 versions", "not ie <= 8"]
 }
