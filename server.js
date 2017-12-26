@@ -5,6 +5,8 @@ const express = require('express')
 const favicon = require('serve-favicon')
 const compression = require('compression')
 const microcache = require('route-cache')
+const opn = require('opn')
+const config = require('./config')
 const resolve = file => path.resolve(__dirname, file)
 const { createBundleRenderer } = require('vue-server-renderer')
 
@@ -35,6 +37,8 @@ function createRenderer(bundle, options) {
   )
 }
 
+let port = process.env.PORT
+let autoOpenBrowser = false
 let renderer
 let readyPromise
 const templatePath = resolve('./dist/index.html')
@@ -51,6 +55,8 @@ if (isProd) {
     template,
     clientManifest
   })
+
+  port = port || config.dev.port
 } else {
   // In development: setup the dev server with watch and hot-reload,
   // and create a new renderer on bundle / index template update.
@@ -61,6 +67,22 @@ if (isProd) {
       renderer = createRenderer(bundle, options)
     }
   )
+
+  autoOpenBrowser = !!config.dev.autoOpenBrowser
+  port = port || config.build.port
+
+  // Define HTTP proxies to your custom API backend
+  // https://github.com/chimurai/http-proxy-middleware
+  const proxyMiddleware = require('http-proxy-middleware')
+  const proxyTable = config.dev.proxyTable
+  // proxy api requests
+  Object.keys(proxyTable).forEach(function(context) {
+    let options = proxyTable[context]
+    if (typeof options === 'string') {
+      options = { target: options }
+    }
+    app.use(proxyMiddleware(options.filter || context, options))
+  })
 }
 
 const serve = (path, cache) =>
@@ -126,7 +148,10 @@ app.get(
       }
 )
 
-const port = process.env.PORT || 8080
 app.listen(port, () => {
-  console.log(`server started at localhost:${port}`)
+  const uri = 'http://localhost:' + port
+  console.log(`server started at ${uri}`)
+  if (autoOpenBrowser && process.env.NODE_ENV !== 'testing') {
+    opn(uri)
+  }
 })
