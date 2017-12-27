@@ -56,7 +56,7 @@ if (isProd) {
     clientManifest
   })
 
-  port = port || config.dev.port
+  port = port || config.build.port || 8080
 } else {
   // In development: setup the dev server with watch and hot-reload,
   // and create a new renderer on bundle / index template update.
@@ -69,7 +69,7 @@ if (isProd) {
   )
 
   autoOpenBrowser = !!config.dev.autoOpenBrowser
-  port = port || config.build.port
+  port = port || config.dev.port || 8080
 
   // Define HTTP proxies to your custom API backend
   // https://github.com/chimurai/http-proxy-middleware
