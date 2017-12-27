@@ -21,15 +21,16 @@
   <link rel="mask-icon" href="/public/img/icons/safari-pinned-tab.svg" color="#4DBA87">
   <!-- Add to home screen for Windows -->
   <meta name="msapplication-TileImage" content="/public/img/icons/msapplication-icon-144x144.png">
-  <meta name="msapplication-TileColor" content="#000000">
+  <meta name="msapplication-TileColor" content="#000000"> {{{ renderResourceHints() }}} {{{ renderStyles() }}}
 </head>
 
 <body>
   <noscript>
     This is your fallback content in case JavaScript fails to load.
   </noscript>
+  <!--vue-ssr-outlet-->
   <%= htmlWebpackPlugin.options.serviceWorkerLoader %>
-    <!--vue-ssr-outlet-->
+    {{{ renderState() }}} {{{ renderScripts() }}}
 </body>
 
 </html>
