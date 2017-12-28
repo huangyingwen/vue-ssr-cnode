@@ -3,6 +3,55 @@ import App from './App.vue'
 import { createRouter } from './router'
 import { createStore } from './store'
 import { sync } from 'vuex-router-sync'
+import * as filters from './util/filters'
+
+import {
+  Vuetify,
+  VBtn,
+  VApp,
+  VList,
+  VIcon,
+  VProgressCircular,
+  VDivider,
+  VBottomNav,
+  VGrid,
+  VAvatar,
+  VToolbar,
+  VCard,
+  VBadge,
+  VForm,
+  VTextField,
+  VNavigationDrawer,
+  VTooltip,
+  VFooter
+} from 'vuetify'
+
+Vue.use(Vuetify, {
+  components: {
+    VApp,
+    VBtn,
+    VList,
+    VIcon,
+    VProgressCircular,
+    VDivider,
+    VBottomNav,
+    VGrid,
+    VAvatar,
+    VToolbar,
+    VCard,
+    VBadge,
+    VForm,
+    VTextField,
+    VNavigationDrawer,
+    VTooltip,
+    VFooter
+  }
+})
+
+// register global utility filters.
+Object.keys(filters).forEach(key => {
+  Vue.filter(key, filters[key])
+})
 
 Vue.config.productionTip = false
 

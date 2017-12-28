@@ -1,26 +1,16 @@
+import 'babel-polyfill'
 import Vue from 'vue'
 import { createApp } from './app'
 import NProgress from 'nprogress'
+import InfiniteScroll from '@/components/infinite-scroll'
+import FastClick from 'fastclick'
 
 // global progress bar
 Vue.prototype.$NProgress = NProgress
 
-// a global mixin that calls `asyncData` when a route component's params change
-Vue.mixin({
-  beforeRouteUpdate(to, from, next) {
-    const { asyncData } = this.$options
-    if (asyncData) {
-      asyncData({
-        store: this.$store,
-        route: to
-      })
-        .then(next)
-        .catch(next)
-    } else {
-      next()
-    }
-  }
-})
+Vue.use(InfiniteScroll)
+
+FastClick.attach(document.body)
 
 const { app, router, store } = createApp()
 
@@ -38,13 +28,26 @@ router.onReady(() => {
   // the data that we already have. Using router.beforeResolve() so that all
   // async components are resolved.
   router.beforeResolve((to, from, next) => {
-    const matched = router.getMatchedComponents(to)
-    const prevMatched = router.getMatchedComponents(from)
-    let diffed = false
-    const activated = matched.filter((c, i) => {
-      return diffed || (diffed = prevMatched[i] !== c)
-    })
-    const asyncDataHooks = activated.map(c => c.asyncData).filter(_ => _)
+    // 动态路由切换有问题，beforeRouteUpdate
+    // const matched = router.getMatchedComponents(to)
+    // const prevMatched = router.getMatchedComponents(from)
+
+    // // 排除路由切换导致的数据获取，由 beforeRouteUpdate 钩子获取
+    // let diffed = false
+    // const activated = matched.filter((c, i) => {
+    //   return diffed || (diffed = prevMatched[i] !== c)
+    // })
+
+    let activated = router.getMatchedComponents(to)
+
+    const asyncDataHooks = activated
+      .filter(
+        a =>
+          a.asyncData &&
+          (!a.asyncDataFetched || a.asyncDataFetched[to.fullPath] !== true)
+      )
+      .map(c => c.asyncData)
+
     if (!asyncDataHooks.length) {
       return next()
     }

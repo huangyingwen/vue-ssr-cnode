@@ -30,8 +30,19 @@ module.exports = {
       'iscroll-lite$': 'iscroll/build/iscroll-lite'
     }
   },
+  resolveLoader: {
+    alias: {
+      'theme-loader': path.join(__dirname, './loaders/theme-loader')
+    }
+  },
   module: {
     rules: [
+      // inject vuetify theme variables
+      {
+        resource: resolve('src/assets/styles/global'),
+        loader: 'theme-loader',
+        enforce: 'pre'
+      },
       {
         test: /\.(js|vue)$/,
         loader: 'eslint-loader',
@@ -43,8 +54,30 @@ module.exports = {
       },
       {
         test: /\.vue$/,
-        loader: 'vue-loader',
-        options: vueLoaderConfig
+        use: [
+          {
+            loader: 'vue-loader',
+            options: vueLoaderConfig
+          },
+          // inject global variables in every .vue file
+          {
+            loader: 'theme-loader',
+            options: {
+              injectInVueFile: true
+            }
+          }
+        ],
+        include: [resolve('src')]
+      },
+      {
+        test: /\.vue$/,
+        use: [
+          {
+            loader: 'vue-loader',
+            options: vueLoaderConfig
+          }
+        ],
+        exclude: [resolve('src')]
       },
       {
         test: /\.js$/,
