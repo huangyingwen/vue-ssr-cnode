@@ -7,9 +7,14 @@ const loadMinified = require('./load-minified')
 const config = require('../config')
 const baseWebpackConfig = require('./webpack.base.conf')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 const nodeExternals = require('webpack-node-externals')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const VueSSRServerPlugin = require('vue-server-renderer/server-plugin')
+
+function resolve(dir) {
+  return path.join(__dirname, '..', dir)
+}
 
 const env =
   process.env.NODE_ENV === 'testing'
@@ -24,11 +29,16 @@ module.exports = merge(baseWebpackConfig, {
     filename: 'server-bundle.js',
     libraryTarget: 'commonjs2'
   },
+  resolve: {
+    alias: {
+      'iscroll-lite$': resolve('./src/ssr-mock/iscroll.js')
+    }
+  },
   // https://webpack.js.org/configuration/externals/#externals
   // https://github.com/liady/webpack-node-externals
   externals: nodeExternals({
     // do not externalize CSS files in case we need to import it from a dep
-    whitelist: /\.css$/
+    whitelist: [/\.css$/, /vuetify/, /iscroll/]
   }),
   plugins: [
     new webpack.DefinePlugin({
@@ -45,6 +55,13 @@ module.exports = merge(baseWebpackConfig, {
       ? [
           new ExtractTextPlugin({
             filename: utils.assetsPath('css/[name].[contenthash].css')
+          }),
+          // Compress extracted CSS. We are using this plugin so that possible
+          // duplicated CSS from different components can be deduped.
+          new OptimizeCSSPlugin({
+            cssProcessorOptions: {
+              safe: true
+            }
           }),
           // generate dist index.html with correct asset hash for caching.
           // you can customize output by editing /index.html
