@@ -1,10 +1,20 @@
-# cnode-ssr
+# vue-ssr-cnode
 
-> cnode-ssr webapp client
+> vue 服务端渲染，基于 vue-cli pwa 模板修改
+
+![vue-ssr-cnode](doc/img/vue-ssr-cnode-01.png)
+
+![vue-ssr-cnode](doc/img/vue-ssr-cnode-02.png)
+
+![vue-ssr-cnode](doc/img/vue-ssr-cnode-03.png)
+
+![vue-ssr-cnode](doc/img/vue-ssr-cnode-04.png)
+
+![vue-ssr-cnode](doc/img/vue-ssr-cnode-store-05.jpg)
 
 ## Build Setup
 
-``` bash
+```bash
 # install dependencies
 npm install
 
@@ -17,6 +27,9 @@ npm run build
 # build for production and view the bundle analyzer report
 npm run build --report
 
+# 启动项目
+npm start
+
 # run unit tests
 npm run unit
 
@@ -26,5 +39,3 @@ npm run e2e
 # run all tests
 npm test
 ```
-
-For detailed explanation on how things work, checkout the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
