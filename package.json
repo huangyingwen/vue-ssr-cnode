@@ -29,6 +29,7 @@
     "serve-favicon": "^2.4.5",
     "trim-html": "^0.1.9",
     "vue": "^2.5.13",
+    "vue-meta": "^1.4.0",
     "vue-router": "^3.0.1",
     "vue-simplemde": "^0.4.6",
     "vuetify": "^0.17.5",

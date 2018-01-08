@@ -4,6 +4,7 @@ import { createRouter } from './router'
 import { createStore } from './store'
 import { sync } from 'vuex-router-sync'
 import * as filters from './util/filters'
+import Meta from 'vue-meta'
 
 import {
   Vuetify,
@@ -51,6 +52,10 @@ Vue.use(Vuetify, {
 // register global utility filters.
 Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])
+})
+
+Vue.use(Meta, {
+  keyName: 'head'
 })
 
 Vue.config.productionTip = false

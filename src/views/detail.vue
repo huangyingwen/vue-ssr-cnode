@@ -21,6 +21,12 @@ import { mapGetters } from 'vuex'
 
 export default {
   name: 'detail',
+  head() {
+    return {
+      title: this.item.title,
+      titleTemplate: '%s · CNode'
+    }
+  },
   computed: {
     ...mapGetters('topics', {
       item: 'getByRouteId'

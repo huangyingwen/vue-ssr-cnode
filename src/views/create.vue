@@ -16,6 +16,10 @@
 <script>
 export default {
   name: 'create',
+  head: {
+    title: '创建帖子',
+    titleTemplate: '%s · CNode'
+  },
   data() {
     return {
       title: '',

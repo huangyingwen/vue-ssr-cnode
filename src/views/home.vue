@@ -25,6 +25,9 @@ let namespace = 'topics'
 export default {
   name: 'home',
   props: {},
+  head: {
+    title: 'Node.js专业中文社区'
+  },
   data() {
     return {
       topicsKey: '',
